@@ -5,7 +5,7 @@ const pathGroups = buildPathGroupsBasedOnWebpackAliases({});
 const pathGroupForKeepingReactImportsAtTop = {
   pattern: "react+(-native|)",
   group: "external",
-  position: "before"
+  position: "before",
 };
 
 /*
@@ -47,7 +47,7 @@ module.exports = {
           "sibling",
           "parent",
           "object",
-          "type"
+          "type",
         ],
         /*
          * Currently we check for existence of webpack alias
@@ -58,8 +58,8 @@ module.exports = {
          */
         pathGroups,
         // Ignore react imports so that they're always ordered to the top of the file.
-        pathGroupsExcludedImportTypes: ["react", "react-native"]
-      }
-    ]
-  }
+        pathGroupsExcludedImportTypes: ["react", "react-native"],
+      },
+    ],
+  },
 };

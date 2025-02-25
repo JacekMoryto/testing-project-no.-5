@@ -65,12 +65,12 @@ const NavBar = () => {
               </Link>
             </span>
             <span
+              data-testid="navbar-username-label"
               className="font-regular focus:outline-none inline-flex items-center border-b-2
              border-transparent px-2 pt-1 text-sm
              leading-5 text-bb-gray-600 text-opacity-50 transition
              duration-150 ease-in-out
               focus:text-bb-gray-700"
-              data-testid="navbar-username-label"
             >
               {userName}
             </span>
