@@ -8,9 +8,19 @@ module.exports = {
   semi: true,
   quoteProps: "as-needed",
   jsxSingleQuote: false,
-  singleQuote: false,
+  singleQuote: true, // Domyślnie używa pojedynczych cudzysłowów
   bracketSpacing: true,
   bracketSameLine: false,
   proseWrap: "always",
   endOfLine: "lf",
+  overrides: [
+    {
+      files: "*.json",
+      options: { singleQuote: false } // JSON wymaga podwójnych cudzysłowów
+    },
+    {
+      files: ["*.ts", "*.tsx"],
+      options: { singleQuote: true } // W TypeScript używamy pojedynczych cudzysłowów
+    }
+  ]
 };
