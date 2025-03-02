@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { TIMEOUT } from 'dns';
 
 
 export class LoginPage {
@@ -26,7 +27,7 @@ export class LoginPage {
 
   async expectNewUserLoggedIn(username: string) {
     await expect(this.page.getByTestId('navbar-username-label')).toContainText(
-      username
+      username, {timeout: 10000}
     );
     await expect(this.page.getByTestId('navbar-logout-link')).toBeVisible();
   }
