@@ -44,14 +44,18 @@ export class TaskPage {
     }
 
     async markTaskAsCompleted(taskName: TaskName){
+        await this.page.waitForResponse('/tasks')
         const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row').filter({ hasText: taskName });
+        const isTaskCompleted = await this.page.getByTestId("tasks-completed-table").getByRole("row", { name: taskName }).count()
+        if(isTaskCompleted) return;
         await pendingTaskInDashboard.getByRole('checkbox').click();
+
     }
 
     async expectTaskAsCompleted(taskName: TaskName){
         const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row').filter({ hasText: taskName });
         const completedTaskInDashboard = this.page.getByTestId('tasks-completed-table').filter({ hasText: taskName });
-        await expect(pendingTaskInDashboard).not.toBeVisible();
+        await expect(pendingTaskInDashboard).toBeHidden()
         await completedTaskInDashboard.scrollIntoViewIfNeeded();
         await expect(completedTaskInDashboard).toBeVisible();
     }

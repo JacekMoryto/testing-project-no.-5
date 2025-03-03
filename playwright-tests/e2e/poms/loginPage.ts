@@ -26,9 +26,9 @@ export class LoginPage {
   }
 
   async expectNewUserLoggedIn(username: string) {
-    await expect(this.page.getByTestId('navbar-username-label')).toContainText(
-      username, {timeout: 10000}
-    );
+    await this.page.waitForResponse('/tasks')
     await expect(this.page.getByTestId('navbar-logout-link')).toBeVisible();
+    await expect(this.page.getByTestId('navbar-username-label')).toContainText(username);
+
   }
 }

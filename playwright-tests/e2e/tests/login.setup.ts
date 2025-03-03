@@ -7,10 +7,8 @@ test.describe('Login Page', () => {
     await page.goto('/');
 
     await loginPage.loginUser('oliver@example.com', 'welcome');
-    await loginPage.expectNewUserLoggedIn('Oliver Smith');
-    console.log('Saving storageState to:', STORAGE_STATE);
-
+   await loginPage.expectNewUserLoggedIn('Oliver Smith');
     await page.context().storageState({path: STORAGE_STATE})
-    console.log(STORAGE_STATE)
+
   })
 });

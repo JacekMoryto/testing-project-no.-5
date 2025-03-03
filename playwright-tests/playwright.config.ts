@@ -1,11 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from "path";
+
 
 
 // import dotenv from 'dotenv';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-export const STORAGE_STATE = "./e2e/auth/session.json"
+export const STORAGE_STATE = path.resolve(__dirname, "e2e/auth/session.json")
 
 export default defineConfig({
   testDir: './e2e',

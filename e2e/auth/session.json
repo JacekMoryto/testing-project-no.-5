@@ -1,0 +1,15 @@
+{
+  "cookies": [
+    {
+      "name": "_granite_session",
+      "value": "JhysGTI%2FIBH8EhvJ%2FPKrKHIc4hozOJHTTM0fSoJilUaMDWot2keoto6m49FLoGckS5aFpt8XWMyWm000K1vfaQ00dj4a5dB4qT6xKwM1d405xxoQP5486S8vKucx%2BSrXMBMICzn%2Bxy41DpW6DZjtzepapnUuCmfbIN1DBBfqaoz9%2BkBAHPZNOHmWvFud9VHiSKfXT2IsJvZqn1GAqrlE8Fg1f4vsQN2H0jT%2FuP6niwnapC%2BkJxSeEt3pzrUnFte%2BlGTcqDvNIv3MYOG58sc4l3vR4H2oyfoi--KFCz6%2BZsFBj1ELjE--%2FYKW5F0r2RtYcoxHyjxtXA%3D%3D",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}
