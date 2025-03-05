@@ -1,7 +1,6 @@
 import { Page, expect } from '@playwright/test';
 import { TIMEOUT } from 'dns';
 
-
 export class LoginPage {
   readonly page: Page;
   readonly emailField: Locator;
@@ -26,9 +25,14 @@ export class LoginPage {
   }
 
   async expectNewUserLoggedIn(username: string) {
-    await this.page.waitForResponse('/tasks')
-    await expect(this.page.getByTestId('navbar-logout-link')).toBeVisible();
-    await expect(this.page.getByTestId('navbar-username-label')).toContainText(username);
-
+    await this.page.waitForResponse('/tasks');
+    // await expect(this.page.getByTestId('navbar-logout-link')).toBeVisible();
+    // await expect(this.page.getByTestId('navbar-username-label')).toContainText(username);
+    await Promise.all([
+      expect(this.page.getByTestId('navbar-logout-link')).toBeVisible(),
+      expect(this.page.getByTestId('navbar-username-label')).toContainText(
+        username
+      ),
+    ]);
   }
 }

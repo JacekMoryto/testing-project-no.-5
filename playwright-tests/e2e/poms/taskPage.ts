@@ -1,4 +1,6 @@
 import { Page, expect } from '@playwright/test'
+import { COMMENT_SELECTORS } from '../constants/selectors/task';
+
 
 interface TaskName {
     taskName: string
@@ -37,7 +39,7 @@ export class TaskPage {
 
 
     async expectNewTaskCreated(taskName: TaskName){
-        const taskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row').filter({hasText: taskName})
+        const taskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName})
         //.getByRole('row', { name: new RegExp(taskName, 'i') });
         await taskInDashboard.scrollIntoViewIfNeeded();
         await expect(taskInDashboard).toBeVisible();
@@ -45,7 +47,7 @@ export class TaskPage {
 
     async markTaskAsCompleted(taskName: TaskName){
         await this.page.waitForResponse('/tasks')
-        const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row').filter({ hasText: taskName });
+        const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName})
         const isTaskCompleted = await this.page.getByTestId("tasks-completed-table").getByRole("row", { name: taskName }).count()
         if(isTaskCompleted) return;
         await pendingTaskInDashboard.getByRole('checkbox').click();
@@ -53,8 +55,8 @@ export class TaskPage {
     }
 
     async expectTaskAsCompleted(taskName: TaskName){
-        const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row').filter({ hasText: taskName });
-        const completedTaskInDashboard = this.page.getByTestId('tasks-completed-table').filter({ hasText: taskName });
+        const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName})
+        const completedTaskInDashboard = this.page.getByTestId('tasks-completed-table').getByRole('row', {name: taskName});
         await expect(pendingTaskInDashboard).toBeHidden()
         await completedTaskInDashboard.scrollIntoViewIfNeeded();
         await expect(completedTaskInDashboard).toBeVisible();
@@ -68,4 +70,18 @@ export class TaskPage {
             await starIcon.click();
 
           };
+
+    async addCommentToGivenTask (taskName: TaskName, commentBody: string) {
+        await this.page.getByText(taskName).click();
+        await this.page.getByTestId(COMMENT_SELECTORS.textField).fill(commentBody);
+        await this.page.getByTestId(COMMENT_SELECTORS.submitButton).click();
+    }
+
+    async expectCommentVisible (commentBody: string) {
+        await expect(this.page.getByTestId(COMMENT_SELECTORS.commentText)).toContainText(commentBody);
+    }
+
+    async expectCommentCountIncreased (taskName: TaskName){
+        await expect(this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName}).locator('td').nth(3)).toHaveText('1');
+    }
     }
