@@ -4,17 +4,21 @@ import {expect, request} from '@playwright/test'
 
 test.describe('Signup Page', () => {
 
-    test('Signup new valid user and login', async ({page, signupPage, loginPage}) => {
+    test('Should signup new valid user and login', async ({page, signupPage, loginPage}) => {
 
-        const newUserName = faker.person.fullName()
+        const newUsername = faker.person.fullName()
         const newEmail = faker.internet.email()
         const newPassword = faker.internet.password()
         await test.slow()
-            await page.goto('/')
-            await loginPage.navigateToSignup()
-            await signupPage.signupNewUser(newUserName, newEmail, newPassword)
-            await expect(page).toHaveURL('/login')
-        await loginPage.loginUser(newEmail, newPassword)
 
+        await test.step('Step 1: Navigate to login page', () => page.goto('/'))
+
+        await test.step('Step 2: Navigate to signup page', () => loginPage.navigateToSignup())
+
+        await test.step('Step 3: Signup valid new user', () => signupPage.signupNewUser({username: newUsername, email: newEmail, password: newPassword}))
+
+        await test.step('Step 4: Expect user to be on login page', () => expect(page).toHaveURL('/login'))
+
+        await test.step('Step 4: Expect user to be on login page', () => loginPage.loginUser(newEmail, newPassword))
 })
 })

@@ -1,14 +1,14 @@
 import { LoginPage } from "../poms/loginPage"
 import { TaskPage } from "../poms/taskPage"
 
+interface UserSessionParams {
+  browser: Browser;
+  email: string;
+  password: string;
+  username: string;
+}
 
-
-export async function createNewUserSession ({browser, email, password, userName}:  {
-    browser: Browser;
-    email: string;
-    password: string;
-    userName: string;
-  }){
+export async function createNewUserSession ({browser, email, password, username,}: UserSessionParams){
 
     const newUserContext = await browser.newContext(({storageState: {cookies:[], origin: []}}))
     const newUserPage = await newUserContext.newPage()
@@ -17,7 +17,7 @@ export async function createNewUserSession ({browser, email, password, userName}
 
     await newUserPage.goto('/');
     await loginPage.loginUser(email, password);
-    await loginPage.expectNewUserLoggedIn(userName)
+    await loginPage.expectNewUserLoggedIn(username)
 
     return {newUserContext, newUserPage, loginPage, taskPage}
 }

@@ -1,0 +1,7 @@
+import { NAVBAR_SELECTORS, TASKS_TABLE_SELECTORS} from "./dashboard";
+import { LOGIN_SELECTORS } from "./login";
+import { COMMENT_SELECTORS } from "./editTask";
+import { CREATE_TASK_SELECTORS } from "./createTask";
+import { SIGNUP_SELECTORS } from "./signup";
+
+export { NAVBAR_SELECTORS, LOGIN_SELECTORS, COMMENT_SELECTORS, CREATE_TASK_SELECTORS, TASKS_TABLE_SELECTORS, SIGNUP_SELECTORS  };

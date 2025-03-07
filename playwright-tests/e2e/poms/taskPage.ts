@@ -1,26 +1,24 @@
 import { Page, expect } from '@playwright/test'
-import { COMMENT_SELECTORS } from '../constants/selectors/task';
-
+import { COMMENT_SELECTORS, CREATE_TASK_SELECTORS, NAVBAR_SELECTORS, TASKS_TABLE_SELECTORS } from '../constants/selectors'
+import { COMMON_TEXTS, DASHBOARD_TEXTS } from '../constants/texts'
 
 interface TaskName {
     taskName: string
 }
 
 interface CreateNewTaskProps extends TaskName  {
-    userName?: string
+    username?: string
 }
 
 export class TaskPage {
-    readonly page:Page
     //readonly pendingTaskInDashboard: Locator
     //readonly CompletedTaskInDashboard: Locator
     // readonly addTaskLink: Locator
     // readonly formTitleField: Locator
 
-    constructor(page:Page){
-        this.page = page
-        //this.pendingTaskInDashboard = page.getByTestId('tasks-pending-table').getByRole('row').filter({ hasText: taskName });
-        //this.completedTaskInDashboard = page.getByTestId('tasks-pending-table').getByRole('row').filter({ hasText: taskName });
+    constructor(private page:Page){
+        //this.pendingTaskInDashboard = page.getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable).getByRole('row').filter({ hasText: taskName });
+        //this.completedTaskInDashboard = page.getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable).getByRole('row').filter({ hasText: taskName });
         //this.addTaskLink = page.getByTestId('navbar-add-todo-link')
         //this.formTitleField = page.getByTestId('form-title-field')
 
@@ -28,35 +26,34 @@ export class TaskPage {
 
     async createNewTask({
         taskName,
-        userName = 'Oliver Smith',
+        username = COMMON_TEXTS.defaultUsername
     }: CreateNewTaskProps){
-        await this.page.getByTestId('navbar-add-todo-link').click();
-        await this.page.getByTestId('form-title-field').fill(taskName);
-        await this.page.locator('.css-2b097c-container').click();
-        await this.page.locator('.css-26l3qy-menu').getByText(userName).click();
-        await this.page.getByTestId('form-submit-button').click();
+        await this.page.getByTestId(NAVBAR_SELECTORS.addTaskLink).click();
+        await this.page.getByTestId(CREATE_TASK_SELECTORS.titleField).fill(taskName);
+        await this.page.locator(CREATE_TASK_SELECTORS.assigneeDropdown).click();
+        await this.page.locator(CREATE_TASK_SELECTORS.assigneeDropdownOption).getByText(username).click();
+        await this.page.getByTestId(CREATE_TASK_SELECTORS.createTaskButton).click();
     }
 
 
     async expectNewTaskCreated(taskName: TaskName){
-        const taskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName})
-        //.getByRole('row', { name: new RegExp(taskName, 'i') });
+        const taskInDashboard = this.page.getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable).getByRole('row', {name: taskName})
         await taskInDashboard.scrollIntoViewIfNeeded();
         await expect(taskInDashboard).toBeVisible();
     }
 
     async markTaskAsCompleted(taskName: TaskName){
         await this.page.waitForResponse('/tasks')
-        const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName})
-        const isTaskCompleted = await this.page.getByTestId("tasks-completed-table").getByRole("row", { name: taskName }).count()
+        const pendingTaskInDashboard = this.page.getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable).getByRole('row', {name: taskName})
+        const isTaskCompleted = await this.page.getByTestId(TASKS_TABLE_SELECTORS.completedTasksTable).getByRole("row", { name: taskName }).count()
         if(isTaskCompleted) return;
         await pendingTaskInDashboard.getByRole('checkbox').click();
 
     }
 
     async expectTaskAsCompleted(taskName: TaskName){
-        const pendingTaskInDashboard = this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName})
-        const completedTaskInDashboard = this.page.getByTestId('tasks-completed-table').getByRole('row', {name: taskName});
+        const pendingTaskInDashboard = this.page.getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable).getByRole('row', {name: taskName})
+        const completedTaskInDashboard = this.page.getByTestId(TASKS_TABLE_SELECTORS.completedTasksTable).getByRole('row', {name: taskName});
         await expect(pendingTaskInDashboard).toBeHidden()
         await completedTaskInDashboard.scrollIntoViewIfNeeded();
         await expect(completedTaskInDashboard).toBeVisible();
@@ -64,24 +61,24 @@ export class TaskPage {
 
     async starTask ( taskName : TaskName) {
             const starIcon = this.page
-              .getByTestId("tasks-pending-table")
+              .getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable)
               .getByRole("row", { name: taskName })
-              .getByTestId("pending-task-star-or-unstar-link");
+              .getByTestId(TASKS_TABLE_SELECTORS.starUnstarButton);
             await starIcon.click();
 
           };
 
     async addCommentToGivenTask (taskName: TaskName, commentBody: string) {
         await this.page.getByText(taskName).click();
-        await this.page.getByTestId(COMMENT_SELECTORS.textField).fill(commentBody);
-        await this.page.getByTestId(COMMENT_SELECTORS.submitButton).click();
+        await this.page.getByTestId(COMMENT_SELECTORS.commentTextField).fill(commentBody);
+        await this.page.getByTestId(COMMENT_SELECTORS.addCommentButton).click();
     }
 
     async expectCommentVisible (commentBody: string) {
-        await expect(this.page.getByTestId(COMMENT_SELECTORS.commentText)).toContainText(commentBody);
+        await expect(this.page.getByTestId(COMMENT_SELECTORS.commentItem)).toContainText(commentBody);
     }
 
     async expectCommentCountIncreased (taskName: TaskName){
-        await expect(this.page.getByTestId('tasks-pending-table').getByRole('row', {name: taskName}).locator('td').nth(3)).toHaveText('1');
+        await expect(this.page.getByTestId(TASKS_TABLE_SELECTORS.pendingTasksTable).getByRole('row', {name: taskName}).locator('td').nth(3)).toHaveText('1'); // Using nth method here since we want to verify the 4th cell of the row
     }
     }
