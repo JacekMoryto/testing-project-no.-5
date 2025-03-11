@@ -29,7 +29,7 @@ export default defineConfig({
       name: 'Logged In tests',
       use: { ...devices['Desktop Chrome'], storageState: STORAGE_STATE },
       dependencies: ['login'],
-      teardown: 'teardown',
+     // teardown: 'teardown',
       testMatch: '**/*.spec.ts',
       testIgnore: '**/signup.spec.ts',
     },

@@ -15,15 +15,20 @@ test.describe('Tasks page', () => {
   let taskName: string;
   let commentBody: string;
 
-  test.beforeEach(async ({ page, taskPage }, testInfo) => {
+  test.beforeEach(async ({ page, taskPage, createTaskViaAPI }, testInfo) => {
     taskName = faker.word.words({ count: 4 });
     commentBody = faker.word.words({ count: 7 });
 
-    if (testInfo.title.includes('[SKIP_SETUP')) return;
-
-    await test.step('Step 1: Go to dashboard', () => page.goto('/'));
-    await test.step('Step 2: Create a new task', () => taskPage.createNewTask({ taskName }));
-
+    if (testInfo.title.includes('[SKIP_API_SETUP]')) {
+      await page.goto('/')
+      await taskPage.createNewTask({ taskName});
+    } else if (testInfo.title.includes('[STANDARD]')){
+      await createTaskViaAPI(taskName, COMMON_TEXTS.standardUsername);
+      await page.goto('/')
+    } else if (testInfo.title.includes('[DEFAULT]')){
+      await createTaskViaAPI(taskName, COMMON_TEXTS.defaultUsername);
+      await page.goto('/')
+    }
   });
 
   test.afterEach(async ({ page, taskPage }, testInfo) => {
@@ -50,7 +55,7 @@ test.describe('Tasks page', () => {
     });
   })
 
-  test('should create a new task assigned to the creator', async ({
+  test('should create a new task assigned to the creator [SKIP_API_SETUP]', async ({
     page,
     taskPage,
   }) => {
@@ -59,12 +64,11 @@ test.describe('Tasks page', () => {
      taskPage.expectNewTaskCreated(taskName))
   });
 
-  test('should be able to mark a task as completed', async ({
+  test('should be able to mark a task as completed [DEFAULT]', async ({
     page,
     taskPage,
   }) => {
     await test.slow();
-
     await test.step('Step 3: Mark the task as completed',  () =>
       taskPage.markTaskAsCompleted(taskName))
 
@@ -72,11 +76,12 @@ test.describe('Tasks page', () => {
       taskPage.expectTaskAsCompleted(taskName))
   });
 
-  test('should be able to delete a task [SKIP_CLEANUP]', async ({
+  test('should be able to delete a task [DEFAULT] [SKIP_CLEANUP]', async ({
     page,
     taskPage,
   }) => {
     test.slow();
+    await page.goto('/')
     const completedTaskInDashboard = page.getByTestId(TASKS_TABLE_SELECTORS.completedTasksTable).getByRole('row').filter({ hasText: taskName });
 
     await test.step('Step 3: Mark the task as completed',  () =>
@@ -97,16 +102,16 @@ test.describe('Tasks page', () => {
     });
   })
 
-  test('should be able to create a new task with a diffrent assignee [SKIP_SETUP]', async ({
+  test('should be able to create a new task with a diffrent assignee [STANDARD]', async ({
     page,
     taskPage,
     browser,
   }) => {
-
+    test.slow()
     await test.step('Step 1: Navigate to dashboard', () => page.goto('/'))
 
-    await test.step('Step 2: Create a new task and assign to a standard user',  () =>
-      taskPage.createNewTask({ taskName, username: COMMON_TEXTS.standardUsername }));
+    // await test.step('Step 2: Create a new task and assign to a standard user',  () =>
+    //   taskPage.createNewTask({ taskName, username: COMMON_TEXTS.standardUsername }));
 
     await test.step('Step 4: Expect the task to be visible on the dashboard', () =>
       taskPage.expectNewTaskCreated(taskName));
@@ -138,7 +143,7 @@ test.describe('Tasks page', () => {
     await newUserContext.close()
   })
 
-  test('should be able to add a comment as a creator to a task [SKIP_SETUP]', async ({
+  test('should be able to add a comment as a creator to a task [STANDARD]', async ({
     page,
     taskPage,
     browser,
@@ -147,8 +152,8 @@ test.describe('Tasks page', () => {
 
     await test.step('Step 1: Navigate to dashboard', () => page.goto('/'));
 
-    await test.step('Step 2: Create a new task assigned to the standard user', () =>
-      taskPage.createNewTask({ taskName, username: COMMON_TEXTS.standardUsername}))
+    // await test.step('Step 2: Create a new task assigned to the standard user', () =>
+    //   taskPage.createNewTask({ taskName, username: COMMON_TEXTS.standardUsername}))
 
     await test.step('Step 3: Add a comment to the task', () =>
       taskPage.addCommentToGivenTask(taskName, commentBody))
@@ -172,7 +177,7 @@ test.describe('Tasks page', () => {
   });
 
 
-  test('should be able to add a comment as an assignee to a task [SKIP_SETUP]', async ({
+  test('should be able to add a comment as an assignee to a task [STANDARD]', async ({
     page,
     taskPage,
     browser,
@@ -181,8 +186,8 @@ test.describe('Tasks page', () => {
     let newUserContext1, newUserPage1, loginPage1, taskPage1;
 
     await test.step('Step 1: Navigate to dashboard', () => page.goto('/'));
-    await test.step('Step 2: Create a new task assigned to the standard user', () =>
-      taskPage.createNewTask({ taskName, username: COMMON_TEXTS.standardUsername }))
+    // await test.step('Step 2: Create a new task assigned to the standard user', () =>
+    //   taskPage.createNewTask({ taskName, username: COMMON_TEXTS.standardUsername }))
 
     await test.step('Step 3: Login as standard user, add a comment and expect comment visibility and comment count increased' , async () => {
       const {
@@ -209,10 +214,11 @@ test.describe('Tasks page', () => {
 })
 
 
-test.describe('Starring tasks feature', () => {
+test.describe('Starring tasks feature ', () => {
   test.describe.configure({ mode: 'serial' });
-    test('should be able to star a task', async ({ page, taskPage }) => {
-
+    test('should be able to star a task [DEFAULT]', async ({ page, taskPage }) => {
+      test.slow()
+      await page.goto('/')
       await test.step('Step 3: Star a task', () => taskPage.starTask(taskName))
 
       await test.step('Step 4: Expect the desired task to have a star', () => {
@@ -229,10 +235,12 @@ test.describe('Starring tasks feature', () => {
     })
   })
 
-    test('should be able to un-star a pending task', async ({
+    test('should be able to un-star a pending task [DEFAULT]', async ({
       page,
       taskPage,
     }) => {
+      test.slow()
+      await page.goto('/')
       await test.step('Step 3: Star a task', () => taskPage.starTask(taskName))
 
       await test.step('Step 3: Un-Star the task and vefiry', async () => {
@@ -245,4 +253,41 @@ test.describe('Starring tasks feature', () => {
     })
   });
 });
+
+test.only('should create a new task using API [SKIP_SETUP][SKIP_CLEANUP]', async ({page, request, taskPage}) => {
+  test.slow()
+  await page.goto('/')
+  await page.waitForResponse('/tasks')
+  const authEmail = await (await page.evaluate(()=> localStorage.getItem('authEmail'))).slice(1, -1);
+  const authToken = await (await page.evaluate(()=> localStorage.getItem('authToken'))).slice(1, -1);
+
+  const usersResponse = await request.get('/users', {
+    headers: {
+      "X-Auth-Email":authEmail,
+      "X-Auth-Token":authToken,
+      "Accept": "application/json"
+    }
+  })
+  await expect(usersResponse.status()).toBe(200)
+
+  const responseBody = await usersResponse.json()
+  const testUserObject = responseBody.users.find(user => user.name === COMMON_TEXTS.standardUsername);
+  const testUserId = testUserObject.id
+
+  const tasksResponse = await request.post('/tasks/', {
+    data: {
+      "assigned_user_id": testUserId,
+      "title": taskName,
+    },
+    headers: {
+      "X-Auth-Email":authEmail,
+      "X-Auth-Token":authToken,
+      "Accept": "application/json"
+    }
+    })
+
+  await expect(tasksResponse.status()).toBe(200)
+  await page.goto('/')
+  await taskPage.expectNewTaskCreated(taskName)
+})
 });

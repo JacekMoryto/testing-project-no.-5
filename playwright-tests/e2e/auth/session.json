@@ -1,0 +1,37 @@
+{
+  "cookies": [
+    {
+      "name": "_granite_session",
+      "value": "i45t9q1AL3g398dkiyKDkYOd5CY%2BbwTQUiDJp3n3%2Blk3160yp4YLgjdIKQpOKLpErGAXw1JkS8Uq16iyY2LNAT3QBpxpHXwsWSoBLysH0RcUHftvNiVKxW47h%2BweV8DOntNHeam7LgBRZN12k8Q%2BkTT7d7VTw5jlJXzJAUrABTR%2BSINED6pziYIdgELZVNko84znqub7ncfXsE4ggzDrv83jPvUTutTEm%2BfeZTyvs2wzdn%2FlZgoCZ4zYlJCDrfhrXkkz661hk8tdruEZICuk8ZuYHg8N9mdf--7W8sDjZim5xkV%2Bwf--ydXJfsdKhFBvPZMFUt1D7w%3D%3D",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "authUserName",
+          "value": "\"Oliver Smith\""
+        },
+        {
+          "name": "authUserId",
+          "value": "1"
+        },
+        {
+          "name": "authToken",
+          "value": "\"cA45mMPcecmWqTSNC7aJwH6k\""
+        },
+        {
+          "name": "authEmail",
+          "value": "\"oliver@example.com\""
+        }
+      ]
+    }
+  ]
+}
