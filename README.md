@@ -18,8 +18,11 @@ This is a test automation project using Playwright for a simple To-Do applicatio
 
 ## Testing Scope
 This project focuses on testing the To-Do application from the following perspectives:
+
 Task Management: Create, update, delete, and complete tasks.
+
 UI Interactions: Automated UI testing for interactions with the task list, such as adding, removing, and editing tasks.
+
 Cross-Browser Testing: Ensuring that the application works correctly on different browsers (using Playwright's built-in support for multiple browsers).
 
 ## Techniques and Tools Used:
