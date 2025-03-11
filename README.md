@@ -24,9 +24,15 @@ Cross-Browser Testing: Ensuring that the application works correctly on differen
 
 ## Techniques and Tools Used:
 Playwright Commands: Used for end-to-end testing, including DOM interactions, form filling, and navigation.
+
 Assertions: Leveraged Playwright's built-in assertions and Chai for behavior-driven testing.
+
 Cross-Browser Testing: Automated tests across Chromium, Firefox, and WebKit to ensure compatibility.
+
 Page Object Model: Implemented to organize test code for better maintainability and reusability.
+
 Global Setup/Teardown: Utilized Playwright's global setup to initialize test environments and share authentication states.
+
 API Calls for Setup: used API requests to set up the test environment, ensuring consistency and reducing the need for manual setup.
+
 Fixtures: Implemented fixtures to manage test data and dependencies efficiently.
